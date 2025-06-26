@@ -1,7 +1,10 @@
+import 'package:cloudtik_sales/screens/campportal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/CustomTextField.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/loginButton.dart';
+import '../screens/campportal_screen.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({super.key});
@@ -23,8 +26,20 @@ class _loginScreenState extends State<LoginScreen>{
       _passwordController.text,
     );
 
+    print(success);
+
     if(success){
-      print('login success');
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CampPortal(
+            user: authProvider.user!,
+            userCamps: authProvider.userCamps,
+            )
+          ),
+      );
+
+      _emailController.clear();
+      _passwordController.clear();
     }
     else{
       ScaffoldMessenger.of(context).showSnackBar(
@@ -36,9 +51,11 @@ class _loginScreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context) {
     final isLoading = Provider.of<AuthProvider>(context).isLoading;
+    final campUsers = Provider.of<AuthProvider>(context).userCamps;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('CloudTik Sales'),
       ),
       body: Center(
         child: Card(
@@ -47,6 +64,11 @@ class _loginScreenState extends State<LoginScreen>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text(
+                    'Login',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20,),
                   CustomTextField(
                     label: 'Email',
                     hint: 'enter your email',
@@ -62,17 +84,7 @@ class _loginScreenState extends State<LoginScreen>{
                   ),
                   SizedBox(height: 10,),
                   isLoading ? CircularProgressIndicator() :
-                  ElevatedButton(
-                    onPressed: handleLogin,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-
-                    ),
-                    child: Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  LoginButton(onPressed: handleLogin),
                 ],),
             ),
 

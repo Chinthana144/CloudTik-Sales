@@ -8,9 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider extends ChangeNotifier{
   bool _isLoading = false;
   String? _token;
+  Map<String, dynamic>? _user;
+  List<dynamic> _userCamps = [];
 
   bool get isLoading => _isLoading;
   String? get token => _token;
+  Map<String, dynamic>? get user => _user;
+  List<dynamic> get userCamps => _userCamps;
 
   Future<bool> login(String email, String password) async{
     _isLoading = true;
@@ -26,9 +30,11 @@ class AuthProvider extends ChangeNotifier{
 
      final data = json.decode(response.body);
 
-     if(response.statusCode == 200 && data['token'] != null)
+     if(data['token'] != null)
        {
          _token = data['token'];
+         _user = data['user'];
+         _userCamps = data['user_camps'];
 
          final prefs = await SharedPreferences.getInstance();
          await prefs.setString('token', _token!);

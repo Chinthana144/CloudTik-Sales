@@ -1,0 +1,10 @@
+// structure of application
+
+//Pages
+login page
+camp portal page
+home page
+customer page
+invoice page
+subscription page
+report page
