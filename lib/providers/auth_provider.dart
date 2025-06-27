@@ -22,16 +22,16 @@ class AuthProvider extends ChangeNotifier{
 
     final uri = Uri.parse('https://cloudtik.trizent.net/api/login');
     try{
-     final response = await http.post(uri, body: {
-         'email': email,
-         'password': password,
-       },
-     );
+       final response = await http.post(uri, body: {
+           'email': email,
+           'password': password,
+         },
+       );
 
-     final data = json.decode(response.body);
-
-     if(data['token'] != null)
+       if(response.statusCode == 200)
        {
+         final data = json.decode(response.body);
+
          _token = data['token'];
          _user = data['user'];
          _userCamps = data['user_camps'];
@@ -44,11 +44,11 @@ class AuthProvider extends ChangeNotifier{
 
          return true;
        }
-     else{
-       _isLoading = false;
-       notifyListeners();
-       return false;
-     }
+       else{
+         _isLoading = false;
+         notifyListeners();
+         return false;
+       }
     }//try
     catch(e){
       _isLoading = false;

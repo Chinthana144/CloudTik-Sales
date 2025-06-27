@@ -8,3 +8,11 @@ customer page
 invoice page
 subscription page
 report page
+
+//home page
+user name
+daily sale
+token count
+graph (optional)
+
+//bottom navigation bar

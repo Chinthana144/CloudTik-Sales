@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/session_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:cloudtik_sales/screens/home_screen.dart';
 
 class CampPortal extends StatefulWidget{
 
@@ -21,6 +25,8 @@ class _CampPortalState extends State<CampPortal>{
 
   @override
   Widget build(BuildContext context) {
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+
     List<dynamic> userCamps = widget.userCamps;
     @override
     void initState() {
@@ -37,8 +43,18 @@ class _CampPortalState extends State<CampPortal>{
             itemBuilder: (context, index) {
               final camp = userCamps[index];
               return ListTile(
-                title: Text('camp id = ${camp['camp_id']}'),
-                subtitle: Text('user id = ${camp['user_id']}'),
+                title: Text('${camp['camp_name']}'),
+                subtitle: Text('${camp['camp_location']}'),
+                onTap: () {
+                  sessionProvider.setSession(
+                      user: camp['user_id'],
+                      camp: camp['camp_id']
+                  );
+
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                }
               );
             }
           ),

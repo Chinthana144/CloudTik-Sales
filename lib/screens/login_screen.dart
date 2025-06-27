@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/CustomTextField.dart';
 import '../providers/auth_provider.dart';
+import '../providers/session_provider.dart';
 import '../widgets/loginButton.dart';
 import '../screens/campportal_screen.dart';
 
@@ -20,13 +21,12 @@ class _loginScreenState extends State<LoginScreen>{
 
   void handleLogin() async{
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
 
     final success = await authProvider.login(
       _emailController.text,
       _passwordController.text,
     );
-
-    print(success);
 
     if(success){
       Navigator.pushReplacement(
@@ -51,7 +51,6 @@ class _loginScreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context) {
     final isLoading = Provider.of<AuthProvider>(context).isLoading;
-    final campUsers = Provider.of<AuthProvider>(context).userCamps;
 
     return Scaffold(
       appBar: AppBar(
