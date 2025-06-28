@@ -38,26 +38,64 @@ class _CampPortalState extends State<CampPortal>{
         title: Text('Camp Portal'),
       ),
       body: Scrollbar(
-          child: ListView.builder(
-            itemCount: userCamps.length,
-            itemBuilder: (context, index) {
-              final camp = userCamps[index];
-              return ListTile(
-                title: Text('${camp['camp_name']}'),
-                subtitle: Text('${camp['camp_location']}'),
-                onTap: () {
-                  sessionProvider.setSession(
-                      user: camp['user_id'],
-                      camp: camp['camp_id']
-                  );
+          child: Column(children: [
+            Text('Select camp'),
+            Expanded(
+              child: ListView.builder(
+                itemCount: userCamps.length,
+                itemBuilder: (context, index) =>Card(
 
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
-                }
-              );
-            }
-          ),
+                  color: Colors.blue[900],
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ListTile(
+                      title: Text(
+                          '${userCamps[index]['camp_name']}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                      ),
+                      subtitle: Text(
+                          '${userCamps[index]['camp_location']}',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                      ),
+                      trailing: SizedBox(
+                        width: 100,
+                        child: IconButton(
+                            onPressed: (){
+                              sessionProvider.setSession(
+                                  user: userCamps[index]['user_id'],
+                                  camp: userCamps[index]['camp_id']
+                              );
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomeScreen())
+                              );
+                            },
+                            icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white,),
+                        )
+                      ),
+                      onTap: (){
+                        sessionProvider.setSession(
+                            user: userCamps[index]['user_id'],
+                            camp: userCamps[index]['camp_id']
+                        );
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeScreen())
+                        );
+                      }
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],),
+
+
       ),
     );
   }
