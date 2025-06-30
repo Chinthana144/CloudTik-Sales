@@ -7,6 +7,8 @@ import 'login_screen.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/invoice_screen.dart';
 import '../screens/customer_screen.dart';
+import '../screens/setting_screen.dart';
+import '../screens/dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget{
   @override
@@ -17,9 +19,10 @@ class _HomeScreenState extends State<HomeScreen>{
   int _selectedIndex = 0;
 
   final List<Widget> _screens = const [
-    Center(child: Text('Home Page')),
+    DashboardScreen(),
     InvoiceScreen(),
     CustomerScreen(),
+    SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -69,6 +72,10 @@ class _HomeScreenState extends State<HomeScreen>{
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Customer',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),

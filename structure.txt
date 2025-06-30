@@ -3,10 +3,11 @@
 //Pages
 login page
 camp portal page
-home page
-customer page
+dashboard page
 invoice page
 subscription page
+user profile page
+customer page
 report page
 
 //home page
