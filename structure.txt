@@ -17,3 +17,8 @@ token count
 graph (optional)
 
 //bottom navigation bar
+
+//logo colors
+background color: #262d35
+forground color: #26b0de
+

@@ -63,10 +63,17 @@ class _loginScreenState extends State<LoginScreen>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Login',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/images/com_logo_1.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
+                  // Text(
+                  //   'Login',
+                  //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  // ),
                   SizedBox(height: 20,),
                   CustomTextField(
                     label: 'Email',

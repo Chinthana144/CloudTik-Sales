@@ -42,24 +42,45 @@ class _HomeScreenState extends State<HomeScreen>{
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('CloudTik Sales'),
+            SizedBox(
+              child: Image.asset(
+                'assets/images/trizent_icon.ico',
+                fit: BoxFit.contain,
+              ),
+              height: 30,
+            ),
+            Text(
+              'CloudTik Sales',
+              style: TextStyle(
+                color: Color(0xFF88deff),
+                fontSize: 22,
+              ),
+            ),
             IconButton(
               onPressed: (){
                 sessionProvider.clearSession();
                 Navigator.pushReplacement(
-                    context, 
+                    context,
                     MaterialPageRoute(builder: (context) => LoginScreen())
                 );
               },
               icon: Icon(Icons.logout),
+              color: Color(0xFF88deff),
             ),
           ],
         ),
+        backgroundColor: Color(0xFF262d35),
       ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        backgroundColor: Colors.red,
+        selectedItemColor: const Color(0xFF26B0DE),
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        elevation: 10,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

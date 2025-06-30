@@ -13,19 +13,17 @@ class DashboardScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Welcome'),
-            IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.add),
-            )
-          ]
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Welcome'),
+              Text('pastha...'),
+            ],
+          ),
         ),
-        Text('Dashboard Screen'),
-        Text('User ID: ${sessionProvider.userId}'),
-        Text('Camp ID: ${sessionProvider.campId}'),
+
       ],
     );
   }//widget
