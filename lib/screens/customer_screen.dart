@@ -16,6 +16,9 @@ class CustomerScreen extends StatefulWidget{
 
 class _CustomerScreenState extends State<CustomerScreen>{
   final _formKey = GlobalKey<FormState>();
+  final List<dynamic> customers = [];
+
+
   TextEditingController _searchController = TextEditingController();
 
   @override
@@ -28,45 +31,95 @@ class _CustomerScreenState extends State<CustomerScreen>{
 
   @override
   Widget build(BuildContext context) {
-    final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
+    final customerProvider = Provider.of<CustomerProvider>(context);
     final customers = customerProvider.customers;
 
     return Scaffold(
       body: Column(
         children: [
-          Text('customers'),
-          Scrollbar(
-            // thumbVisibility: true,
-              child: Expanded(
-                child: customers.isEmpty ?
-                  const Center(child: CircularProgressIndicator())
+          TextField(
+            controller: _searchController,
+            onChanged: (value) {
+              customerProvider.filterCustomers(value);
+            },
+            decoration: InputDecoration(
+              hintText: 'Search',
+              border: OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  customerProvider.filterCustomers('');
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 8,),
+          Expanded(
+            child: Scrollbar(
+              child: customers.isEmpty ?
+              const Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: customers.length,
-                    itemBuilder: (context, index) {
-                      final customer = customers[index];
-                      return ListTile(
-                        title: Text(customer['fullname']),
-                        subtitle: Text(customer['phone']),
-                        trailing: SizedBox(
-                          width: 50,
-                          child: IconButton(
-                              onPressed: (){},
-                              icon: Icon(Icons.edit),
-                          )
+                shrinkWrap: true,
+                itemCount: customers.length,
+                itemBuilder: (context, index) {
+                  final customer = customers[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(
+                          customer['fullname'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                      );
-                    },
-                  ),
+                        subtitle: Text(
+                          customer['username'],
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        trailing: SizedBox(
+                            width: 50,
+                            child: IconButton(
+                              onPressed: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CustomerDialog(
+                                    title: 'Edit Customer',
+                                    name: customer['fullname'],
+                                    phone: customer['phone'],
+                                    pwd: customer['password'],
+                                    onSubmit: (name, phone, pwd) async {
+                                      final success = await customerProvider.updateCustomer(context, customer['id'].toString(), name, phone, pwd);
+                                      if(success){
+                                        Navigator.pop(context);
+                                        customerProvider.fetchCustomers(context);
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.edit),
+                            )
+                        ),
+                      ),
+                    );
+                  }
                 ),
               ),
+            ),
           ]),
           floatingActionButton: FloatingActionButton(
             onPressed: () => showDialog(
               context: context,
               builder: (context) => CustomerDialog(
                 onSubmit: (name, phone, pwd) async {
-                  await customerProvider.addCustomer(context, name, phone, pwd);
+                  final success = await customerProvider.addCustomer(context, name, phone, pwd);
+                  if(success){
+                    Navigator.pop(context);
+                    customerProvider.fetchCustomers(context);
+                  }
                 },
               ),
             ),

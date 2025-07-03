@@ -8,8 +8,10 @@ import '../providers/auth_provider.dart';
 class CustomerProvider with ChangeNotifier {
   bool isLoading = false;
   List<dynamic> _customers = [];
+  List<dynamic> _filteredCustomers = [];
 
-  List<dynamic> get customers => _customers;
+  List<dynamic> get customers => _filteredCustomers;
+  // List<dynamic> get customers => _filteredCustomers;
 
   Future<bool> addCustomer(BuildContext context, String name, String phone, String pwd) async{
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
@@ -37,11 +39,11 @@ class CustomerProvider with ChangeNotifier {
         // print('Response Status Code: ${response.statusCode}');
 
         if(response.statusCode == 200){
-          print("CORRECT RESPONSE ${response.body}");
+          print("CUSTOMER ADDED SUCCESSFULLY. ${response.body}");
           return true;
         }
         else {
-          print('Error Response: ${response.body}');
+          print('CUSTOMER ADD FAILED. ${response.body}');
           return false;
         }
     }
@@ -49,6 +51,44 @@ class CustomerProvider with ChangeNotifier {
       return false;
     }
   }//add customer
+
+  //update customer
+  Future<bool> updateCustomer(BuildContext context, String id, String name, String phone, String pwd) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final uri = Uri.parse('https://cloudtik.trizent.net/api/update_customer');
+
+    try {
+      final response = await http.put(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+          body: {
+            'customer_id': id,
+            'fullname': name,
+            'phone': phone,
+            'password': pwd,
+          }
+      );
+
+      if(response.statusCode == 200){
+        await fetchCustomers(context);
+        print("CUSTOMER UPDATED SUCCESSFULLY: ${response.body}");
+        return true;
+      }
+      else {
+        print('CUSTOMER UPDATE FAILED: ${response.body}');
+        return false;
+      }
+    }
+    catch(e) {
+      return false;
+    }
+  }//update customer
 
   Future<bool> fetchCustomers(BuildContext context) async{
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
@@ -71,6 +111,7 @@ class CustomerProvider with ChangeNotifier {
       if(response.statusCode == 200) {
         final data = json.decode(response.body);
         _customers = data;
+        _filteredCustomers = data;
         notifyListeners();
         return true;
       }
@@ -85,6 +126,20 @@ class CustomerProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
-
   }
+
+  //filter customers
+  void filterCustomers(String query) {
+    if (query.isEmpty) {
+      _filteredCustomers = _customers;
+    } else {
+      _filteredCustomers = _customers.where((customer) {
+        final name = customer['fullname']?.toLowerCase() ?? '';
+        final phone = customer['phone']?.toLowerCase() ?? '';
+        return name.contains(query.toLowerCase()) || phone.contains(query.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
+  }//filter customers
+
 }//class

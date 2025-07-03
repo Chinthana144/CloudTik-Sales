@@ -22,3 +22,6 @@ graph (optional)
 background color: #262d35
 forground color: #26b0de
 
+//TODO LIST
+* add appbar image method to camp portal
+* validate forms (customers)

@@ -6,10 +6,20 @@ import '../widgets/CustomNumberField.dart';
 
 class CustomerDialog extends StatefulWidget{
   final Function(String name, String phone, String pwd) onSubmit;
+  final String? title;
+  final int? customer_id;
+  final String? name;
+  final String? phone;
+  final String? pwd;
 
   const CustomerDialog({
     super.key,
     required this.onSubmit,
+    this.title,
+    this.customer_id,
+    this.name,
+    this.phone,
+    this.pwd,
   });
 
   @override
@@ -25,12 +35,15 @@ class _CustomerDialogState extends State<CustomerDialog>{
   @override
   void initState() {
     super.initState();
+    _nameController.text = widget.name ?? '';
+    _phoneController.text = widget.phone ?? '';
+    _pwdController.text = widget.pwd ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add Customer'),
+      title: Text(widget.title ?? 'Add Account'),
       content: Form(
           key: _formKey,
           child: Column(
@@ -75,7 +88,7 @@ class _CustomerDialogState extends State<CustomerDialog>{
                 Provider.of<CustomerProvider>(context, listen: false).fetchCustomers(context);
               }
             },
-            child: Text('Add'),
+            child: Text(widget.name != null ? 'Update' : 'Add'),
         ),
       ],
     );
