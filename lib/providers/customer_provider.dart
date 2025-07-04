@@ -126,7 +126,7 @@ class CustomerProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
-  }
+  }//fetch customers
 
   //filter customers
   void filterCustomers(String query) {
@@ -142,4 +142,45 @@ class CustomerProvider with ChangeNotifier {
     notifyListeners();
   }//filter customers
 
+  //serach customer
+  Future<bool> searchCustomer(BuildContext context, String query) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final uri = Uri.https(
+      'cloudtik.trizent.net',
+      '/api/search_customer',
+      {
+        'camp_id': campId.toString(),
+        'search': query,
+      },
+    );
+
+    try{
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      // print("response $response.statusCode");
+
+      if(response.statusCode == 200){
+        final data = json.decode(response.body);
+        _customers = data;
+        _filteredCustomers = data;
+        notifyListeners();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    catch(e){
+      return false;
+    }
+  }
 }//class

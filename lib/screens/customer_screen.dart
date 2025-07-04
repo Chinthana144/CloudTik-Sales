@@ -40,7 +40,8 @@ class _CustomerScreenState extends State<CustomerScreen>{
           TextField(
             controller: _searchController,
             onChanged: (value) {
-              customerProvider.filterCustomers(value);
+              customerProvider.searchCustomer(context, value);
+              // customerProvider.fetchCustomers(context);
             },
             decoration: InputDecoration(
               hintText: 'Search',

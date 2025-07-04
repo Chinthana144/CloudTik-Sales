@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'login_screen.dart';
 import '../widgets/bottom_navbar.dart';
 import '../screens/invoice_screen.dart';
+import '../screens/subscription_screen.dart';
 import '../screens/customer_screen.dart';
 import '../screens/setting_screen.dart';
 import '../screens/dashboard_screen.dart';
@@ -21,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen>{
   final List<Widget> _screens = const [
     DashboardScreen(),
     InvoiceScreen(),
+    SubscriptionScreen(),
     CustomerScreen(),
     SettingsScreen(),
   ];
@@ -75,23 +77,27 @@ class _HomeScreenState extends State<HomeScreen>{
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         selectedItemColor: const Color(0xFF26B0DE),
         unselectedItemColor: Colors.grey,
-        selectedFontSize: 14,
+        selectedFontSize: 13,
         unselectedFontSize: 12,
-        elevation: 10,
+        // elevation: 10,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note),
-            label: 'Invice',
+            icon: Icon(Icons.description),
+            label: 'Invoice',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.subscriptions),
+            label: 'Subscriptions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
             label: 'Customer',
           ),
           BottomNavigationBarItem(
