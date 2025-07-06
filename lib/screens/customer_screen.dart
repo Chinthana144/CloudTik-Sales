@@ -19,7 +19,7 @@ class _CustomerScreenState extends State<CustomerScreen>{
   final List<dynamic> customers = [];
 
 
-  TextEditingController _searchController = TextEditingController();
+  final _searchController = TextEditingController();
 
   @override
   void initState() {

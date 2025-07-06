@@ -91,6 +91,7 @@ class CustomerProvider with ChangeNotifier {
   }//update customer
 
   Future<bool> fetchCustomers(BuildContext context) async{
+    clearCustomers();
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     final userId = sessionProvider.userId;
     final campId = sessionProvider.campId;
@@ -144,6 +145,7 @@ class CustomerProvider with ChangeNotifier {
 
   //serach customer
   Future<bool> searchCustomer(BuildContext context, String query) async{
+    clearCustomers();
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     final userId = sessionProvider.userId;
     final campId = sessionProvider.campId;
@@ -182,5 +184,10 @@ class CustomerProvider with ChangeNotifier {
     catch(e){
       return false;
     }
+  }
+
+  void clearCustomers() {
+    _customers = [];
+    notifyListeners();
   }
 }//class
