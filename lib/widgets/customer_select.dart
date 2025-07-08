@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/package_provider.dart';
 
 class CustomerSelect extends StatelessWidget{
   final List<dynamic> customers;
+  final List<dynamic>? packages;
 
   CustomerSelect({
     super.key,
     required this.customers,
+    this.packages,
   });
 
   @override
   Widget build(BuildContext context) {
+    final packageProvider = Provider.of<PackageProvider>(context);
+    final packages = packageProvider.packages;
+
     return AlertDialog(
       title: Text('Select Customer'),
       content: SizedBox(
@@ -30,6 +37,19 @@ class CustomerSelect extends StatelessWidget{
                   ),
                   subtitle: Text(
                     customer['username'],
+                  ),
+                  trailing: ElevatedButton(
+                      onPressed: (){
+                        packageProvider.fetchPackages(context, customer['id'].toString());
+                        // print('customer: $customer');
+                        // print('packages: $packages');
+                        // Navigator.pop(context, customer);
+                        Navigator.of(context).pop({
+                          'customer' : customer,
+                          'packages' : packages,
+                        });
+                      },
+                      child: Text('Select'),
                   ),
                 ),
             );

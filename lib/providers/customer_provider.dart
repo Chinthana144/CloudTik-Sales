@@ -168,7 +168,7 @@ class CustomerProvider with ChangeNotifier {
         },
       );
 
-      // print("response $response.statusCode");
+      print("search customer code =  $response.statusCode");
 
       if(response.statusCode == 200){
         final data = json.decode(response.body);

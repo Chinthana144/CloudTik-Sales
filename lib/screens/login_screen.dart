@@ -88,56 +88,58 @@ class _loginScreenState extends State<LoginScreen>{
         title: Text('CloudTik Sales'),
       ),
       body: Center(
-        child: Card(
-          child: Padding(padding: EdgeInsets.all(15),
-            child: Form(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/com_logo_3.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  CustomTextField(
-                    label: 'Email',
-                    hint: 'enter your email',
-                    obscureText: false,
-                    controller: _emailController,
-                  ),
-                  SizedBox(height: 10,),
-                  CustomTextField(
-                    label: 'Password',
-                    hint: 'enter your password',
-                    obscureText: true,
-                    controller: _passwordController,
-                  ),
-                  // SizedBox(height: 10,),
-                  Row(
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            child: Card(
+              child: Padding(padding: EdgeInsets.all(15),
+                child: Form(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (val) {
-                          setState(() {
-                            _rememberMe = val ?? false;
-                          });
-                        },
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/com_logo_3.png',
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                      const Text("Remember Me"),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  isLoading ? CircularProgressIndicator() :
-                  LoginButton(onPressed: handleLogin),
-                ],),
+                      SizedBox(height: 20,),
+                      CustomTextField(
+                        label: 'Email',
+                        hint: 'enter your email',
+                        obscureText: false,
+                        controller: _emailController,
+                      ),
+                      SizedBox(height: 10,),
+                      CustomTextField(
+                        label: 'Password',
+                        hint: 'enter your password',
+                        obscureText: true,
+                        controller: _passwordController,
+                      ),
+                      // SizedBox(height: 10,),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _rememberMe,
+                            onChanged: (val) {
+                              setState(() {
+                                _rememberMe = val ?? false;
+                              });
+                            },
+                          ),
+                          const Text("Remember Me"),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      isLoading ? CircularProgressIndicator() :
+                      LoginButton(onPressed: handleLogin),
+                    ],),
+                ),
+              ),
             ),
-
           ),
         ),
-
       ),
     );
   }
