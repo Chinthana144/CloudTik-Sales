@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/customer_provider.dart';
 import '../providers/package_provider.dart';
+import '../providers/subscription_provider.dart';
 import '../widgets/customer_select.dart';
+import '../widgets/qrcode_dialog.dart';
 
 class InvoiceScreen extends StatefulWidget {
   const InvoiceScreen({super.key});
@@ -28,6 +30,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   @override
   Widget build(BuildContext context) {
     final customerProvider = Provider.of<CustomerProvider>(context);
+    final subscriptionProvider = Provider.of<SubscriptionProvider>(context);
     final customers = customerProvider.customers;
 
 
@@ -47,6 +50,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           }
           customers.clear();
           customerProvider.clearCustomers();
+          _searchController.clear();
           _dialogShown = false;
         });
       });
@@ -98,27 +102,77 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                       ),
-                      Text('${_selectedCustomer!['phone']}'),
+                      Text(
+                          '${_selectedCustomer!['phone']}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      ),
                     ],),
                 ),
               ),
 
             if(_selectedPackage.isNotEmpty)
               Card(
-                child : DropdownButton(
-                    hint: Text('Select package'),
-                    isExpanded: true,
-                    items: _selectedPackage.map((package) {
-                      return DropdownMenuItem(
-                        value: _packageController.text.isEmpty ? 'Select package' : _packageController.text,
-                        child: Text(package['name']),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _packageController.text = value!;
-                      });
-                    },
+                child : Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _selectedPackage.length,
+                        itemBuilder: (context, index) {
+                          final package = _selectedPackage[index];
+                          return Card(
+                            child: ListTile(
+                              title: Text(
+                                '${package['name']} : ${package['price']} AED',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${package['duration']} Days'
+                              ),
+                              trailing: ElevatedButton(
+                                onPressed: () async{
+                                    // print('submit subscription ${package['id']}');
+                                    // print('submit customer ${_selectedCustomer!['id']}');
+
+                                    // final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+                                    final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+
+                                    if(success){
+                                      print('package submitted...');
+                                      final qrData = 'https://cloudtik.trizent.net/userlogin';
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => QrcodeDialog(qrData: qrData),
+                                      ).then(
+                                        (value) => Navigator.of(context).pop(),
+                                      );
+
+                                      // Navigator.pop(context);
+                                      _selectedCustomer = null;
+                                      _selectedPackage.clear();
+                                      _searchController.clear();
+                                      // _dialogShown = false;
+                                      customers.clear();
+                                    }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.blue[800]),
+                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                ),
+                                child: Text('Submit'),
+                              )
+                            ),
+                          );
+                        }
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

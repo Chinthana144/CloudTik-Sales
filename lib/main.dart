@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/session_provider.dart';
 import 'providers/customer_provider.dart';
+import 'providers/package_provider.dart';
+import 'providers/subscription_provider.dart';
 import 'screens/login_screen.dart';
 
 void main() {
@@ -14,6 +16,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => SessionProvider()),
         ChangeNotifierProvider(create: (context) => CustomerProvider()),
         ChangeNotifierProvider(create: (context) => PackageProvider()),
+        ChangeNotifierProvider(create: (context) => SubscriptionProvider()),
       ],
       child: const MyApp(),
     ),
