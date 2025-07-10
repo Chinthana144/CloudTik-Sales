@@ -3,15 +3,17 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class QrcodeDialog extends StatelessWidget{
   final String qrData;
+  final String? title;
 
   const QrcodeDialog({
     required this.qrData,
+    this.title
   });
 
 @override
   Widget build(BuildContext context) {
     return  AlertDialog(
-      title: Text('QR Code'),
+      title: title != null ? Text(title!) : Text('QR Code'),
       content: SizedBox(
         width: double.maxFinite,
         height: 250,

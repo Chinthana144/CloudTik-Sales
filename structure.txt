@@ -1,13 +1,13 @@
 // structure of application
 
 //Pages
-login page
-camp portal page
+login page ------------------ created
+camp portal page ------------ created
 dashboard page
-invoice page
+invoice page ---------------- created
 subscription page
 user profile page
-customer page
+customer page --------------- created
 report page
 
 //home page
@@ -25,4 +25,6 @@ forground color: #26b0de
 //TODO LIST
 * add appbar image method to camp portal
 * validate forms (customers)
-* login username and pwd store -- done
+* login username and pwd store --------------- done
+* decorate invoice page
+* scrollbar for invoice page

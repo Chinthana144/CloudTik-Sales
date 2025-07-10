@@ -2,10 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/CustomTextField.dart';
-import '../widgets/customer_dialog.dart';
-import '../providers/session_provider.dart';
 import '../providers/customer_provider.dart';
+import '../widgets/customer_dialog.dart';
+import '../widgets/qrcode_dialog.dart';
 
 class CustomerScreen extends StatefulWidget{
   const CustomerScreen({super.key});
@@ -17,7 +16,6 @@ class CustomerScreen extends StatefulWidget{
 class _CustomerScreenState extends State<CustomerScreen>{
   final _formKey = GlobalKey<FormState>();
   final List<dynamic> customers = [];
-
 
   final _searchController = TextEditingController();
 
@@ -81,28 +79,42 @@ class _CustomerScreenState extends State<CustomerScreen>{
                           ),
                         ),
                         trailing: SizedBox(
-                            width: 50,
-                            child: IconButton(
-                              onPressed: (){
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => CustomerDialog(
-                                    title: 'Edit Customer',
-                                    name: customer['fullname'],
-                                    phone: customer['phone'],
-                                    pwd: customer['password'],
-                                    onSubmit: (name, phone, pwd) async {
-                                      final success = await customerProvider.updateCustomer(context, customer['id'].toString(), name, phone, pwd);
-                                      if(success){
-                                        Navigator.pop(context);
-                                        customerProvider.fetchCustomers(context);
-                                      }
-                                    },
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.edit),
-                            )
+                            width: 100,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: (){
+                                    final qrData = 'https://cloudtik.trizent.net/userlogin';
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => QrcodeDialog(qrData: qrData, title: '${customer['fullname']}'),
+                                    );
+                                  },
+                                  icon: Icon(Icons.qr_code),
+                                ),
+                                IconButton(
+                                  onPressed: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => CustomerDialog(
+                                        title: 'Edit Customer',
+                                        name: customer['fullname'],
+                                        phone: customer['phone'],
+                                        pwd: customer['password'],
+                                        onSubmit: (name, phone, pwd) async {
+                                          final success = await customerProvider.updateCustomer(context, customer['id'].toString(), name, phone, pwd);
+                                          if(success){
+                                            Navigator.pop(context);
+                                            customerProvider.fetchCustomers(context);
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.edit),
+                                )
+                              ]),
+
                         ),
                       ),
                     );

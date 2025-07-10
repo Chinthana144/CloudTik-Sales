@@ -149,14 +149,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => QrcodeDialog(qrData: qrData),
-                                      ).then(
-                                        (value) => Navigator.of(context).pop(),
                                       );
-
                                       // Navigator.pop(context);
-                                      _selectedCustomer = null;
-                                      _selectedPackage.clear();
-                                      _searchController.clear();
+                                      // _selectedCustomer = null;
+                                      // _selectedPackage.clear();
+                                      // _searchController.clear();
                                       // _dialogShown = false;
                                       customers.clear();
                                     }
