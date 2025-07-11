@@ -25,7 +25,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   List<Map<String, dynamic>> _selectedPackage = [];
 
   final _searchController = TextEditingController();
-  final _packageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +45,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
               _selectedCustomer = result['customer'];
               _selectedPackage = List<Map<String, dynamic>>.from(result['packages']);
               // _selectedPackage = result['packages'];
+              print('selected customer: $_selectedCustomer');
+              print('selected package: $_selectedPackage');
             });
           }
           customers.clear();
@@ -57,125 +58,128 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     }
 
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
+        child: Padding(
           padding: EdgeInsets.all(8),
           child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('Invoice Screen'),
-            Form(
-              key: _formKey,
-              child: Column(children: [
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        print('search customers');
-                        // customers.clear();
-                        customerProvider.clearCustomers();
-                        customerProvider.searchCustomer(context, _searchController.text);
-                        print('customers - $customers');
-                      },
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text('Invoice Screen'),
+              Form(
+                key: _formKey,
+                child: Column(children: [
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          // print('search customers');
+                          // customers.clear();
+                          customerProvider.clearCustomers();
+                          customerProvider.searchCustomer(context, _searchController.text);
+                          // print('customers - $customers');
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8,),
+                  // customers.length > 1 ? Text('open panel') : Text('select customer')
+                ],),
+              ),
+
+              if(_selectedCustomer != null)
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                        children: [
+                          Text(
+                            '${_selectedCustomer!['fullname']}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                          Text(
+                            '${_selectedCustomer!['username']}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                        ]),
+                  ),
+                ),
+
+              if(_selectedPackage.isNotEmpty)
+                Card(
+                  child : Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _selectedPackage.length,
+                            itemBuilder: (context, index) {
+                              final package = _selectedPackage[index];
+                              return Card(
+                                child: ListTile(
+                                    title: Text(
+                                      '${package['name']} : ${package['price']} AED',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                        '${package['duration']} Days'
+                                    ),
+                                    trailing: ElevatedButton(
+                                      onPressed: () async{
+                                        // print('submit subscription ${package['id']}');
+                                        // print('submit customer ${_selectedCustomer!['id']}');
+
+                                        // final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+                                        final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+
+                                        if(success){
+                                          print('package submitted...');
+                                          final qrData = 'https://cloudtik.trizent.net/userlogin';
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => QrcodeDialog(qrData: qrData),
+                                          );
+                                          // Navigator.pop(context);
+                                          _selectedCustomer = null;
+                                          _selectedPackage.clear();
+                                          // _searchController.clear();
+                                          // _dialogShown = false;
+                                          customers.clear();
+                                          customerProvider.clearCustomers();
+                                        }
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all(Colors.blue[800]),
+                                        foregroundColor: MaterialStateProperty.all(Colors.white),
+                                      ),
+                                      child: Text('Submit'),
+                                    )
+                                ),
+                              );
+                            }
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(height: 8,),
-                // customers.length > 1 ? Text('open panel') : Text('select customer')
-              ],),
-            ),
 
-            if(_selectedCustomer != null)
-              Card(
-                child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                      Text(
-                          '${_selectedCustomer!['fullname']}',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                      ),
-                      Text(
-                          '${_selectedCustomer!['phone']}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                      ),
-                    ],),
-                ),
-              ),
+              // Text('${_selectedPackage.length}'),
 
-            if(_selectedPackage.isNotEmpty)
-              Card(
-                child : Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _selectedPackage.length,
-                        itemBuilder: (context, index) {
-                          final package = _selectedPackage[index];
-                          return Card(
-                            child: ListTile(
-                              title: Text(
-                                '${package['name']} : ${package['price']} AED',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${package['duration']} Days'
-                              ),
-                              trailing: ElevatedButton(
-                                onPressed: () async{
-                                    // print('submit subscription ${package['id']}');
-                                    // print('submit customer ${_selectedCustomer!['id']}');
-
-                                    // final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
-                                    final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
-
-                                    if(success){
-                                      print('package submitted...');
-                                      final qrData = 'https://cloudtik.trizent.net/userlogin';
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => QrcodeDialog(qrData: qrData),
-                                      );
-                                      // Navigator.pop(context);
-                                      // _selectedCustomer = null;
-                                      // _selectedPackage.clear();
-                                      // _searchController.clear();
-                                      // _dialogShown = false;
-                                      customers.clear();
-                                    }
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.blue[800]),
-                                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                                ),
-                                child: Text('Submit'),
-                              )
-                            ),
-                          );
-                        }
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-            Text('${_selectedPackage.length}'),
-
-          ],
+            ],
+          ),
         ),
       ),
     );

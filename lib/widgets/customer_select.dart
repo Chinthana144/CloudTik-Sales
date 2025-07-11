@@ -41,7 +41,7 @@ class CustomerSelect extends StatelessWidget{
                   trailing: ElevatedButton(
                       onPressed: (){
                         packageProvider.fetchPackages(context, customer['id'].toString());
-                        // print('customer: $customer');
+                        print('customer: $customer');
                         // print('packages: $packages');
                         // Navigator.pop(context, customer);
                         Navigator.of(context).pop({
