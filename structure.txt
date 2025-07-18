@@ -1,14 +1,14 @@
 // structure of application
 
 //Pages
-login page ------------------ created
-camp portal page ------------ created
-dashboard page
-invoice page ---------------- created
-subscription page
-user profile page
-customer page --------------- created
-report page
+* login page ------------------ created
+* camp portal page ------------ created
+* dashboard page
+* invoice page ---------------- created
+* subscription page
+* user profile page
+* customer page --------------- created
+* report page
 
 //home page
 user name
@@ -27,4 +27,4 @@ forground color: #26b0de
 * validate forms (customers)
 * login username and pwd store --------------- done
 * decorate invoice page
-* scrollbar for invoice page
+* scrollbar for invoice page ----------------- done

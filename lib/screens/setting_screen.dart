@@ -7,8 +7,19 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('settings Page'),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+                children: [
+                  Text('goto user profile'),
+                  SizedBox(height: 20),
+                  Text('goto report'),
+                ]
+            )
+        ),
+      ),
     );
   }
 }
