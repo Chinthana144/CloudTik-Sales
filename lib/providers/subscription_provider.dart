@@ -11,10 +11,11 @@ class SubscriptionProvider extends ChangeNotifier{
   bool isLoading = false;
   List<dynamic> _subscriptions = [];
   List<PieChartSectionData> _sections = [];
+  List<dynamic> _totals = [];
 
   List<PieChartSectionData> get sections => _sections;
   List<dynamic> get subscriptions => _subscriptions;
-
+  List<dynamic> get totals => totals;
 
   Future<bool> addSubscription(BuildContext context, String customerId, String packageId) async{
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
@@ -191,7 +192,7 @@ class SubscriptionProvider extends ChangeNotifier{
       List<String> colors = List<String>.from(data['colors']);
       List<String> titles = List<String>.from(data['titles']);
 
-      print('values = $values');
+      // print('values = $values');
 
       _sections = List.generate(values.length, (index) {
         return PieChartSectionData(
@@ -210,9 +211,53 @@ class SubscriptionProvider extends ChangeNotifier{
       print('data fetch failed...');
       throw Exception('Failed to load chart data');
     }
-
-
   }//fetch chart data
+
+  //get subscriptions totals
+  Future<void> getSubscriptionsTotals(BuildContext context) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+
+    final today = DateTime.now();
+    final formattedDate = DateFormat('yyyy-MM-dd').format(today);
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final uri = Uri.https(
+      'cloudtik.trizent.net',
+      '/api/getDonutChartData',
+      {
+        'camp_id': campId.toString(),
+        'user_id': userId.toString(),
+        'search_date': formattedDate.toString(),
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if(response.statusCode == 200){
+      final data = jsonDecode(response.body);
+
+      List<String> values = List<String>.from(data['values']);
+
+      final count = values.length;
+      final total = values.map((value) => double.parse(value)).reduce((a, b) => a + b);
+
+      print('count = $count');
+      print('total = $total');
+
+      _totals = [count, total];
+      notifyListeners();
+    }
+    else{
+      print('data fetch failed...');
+    }
+  }//fetch totals
 
   void clearSubscriptions() {
     _subscriptions = [];

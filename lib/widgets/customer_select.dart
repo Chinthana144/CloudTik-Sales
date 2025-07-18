@@ -4,7 +4,7 @@ import '../providers/package_provider.dart';
 
 class CustomerSelect extends StatelessWidget{
   final List<dynamic> customers;
-  final List<dynamic>? packages;
+  final List<Map<String, dynamic>>? packages;
 
   CustomerSelect({
     super.key,
@@ -23,38 +23,25 @@ class CustomerSelect extends StatelessWidget{
         width: double.maxFinite,
         height: 400,
         child: ListView.builder(
-          shrinkWrap: true,
           itemCount: customers.length,
           itemBuilder: (context, index) {
-            final customer = customers[index];
-            return Card(
-                child: ListTile(
-                  title: Text(
-                    customer['fullname'],
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    customer['username'],
-                  ),
-                  trailing: ElevatedButton(
-                      onPressed: (){
-                        packageProvider.fetchPackages(context, customer['id'].toString());
-                        print('customer: $customer');
-                        // print('packages: $packages');
-                        // Navigator.pop(context, customer);
-                        Navigator.of(context).pop({
-                          'customer' : customer,
-                          'packages' : packages,
-                        });
-                      },
-                      child: Text('Select'),
-                  ),
-                ),
+            final item = customers[index];
+            return ListTile(
+              title: Text(item['customer']['fullname']),
+              subtitle: Text(item['customer']['username']),
+              trailing: ElevatedButton(
+                  onPressed: (){
+                    Navigator.of(context).pop({
+                      'customer' : item['customer'],
+                      'packages' : item['packages'],
+                    });
+                    print('selected packages: ${item['packages']}');
+                  },
+                  child: Text('Select'),
+              ),
             );
-          }//item builder
-        )
+          }
+        ),
       ),
       actions: [
         TextButton(

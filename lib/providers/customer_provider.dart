@@ -143,7 +143,7 @@ class CustomerProvider with ChangeNotifier {
     notifyListeners();
   }//filter customers
 
-  //serach customer
+  //search customer
   Future<bool> searchCustomer(BuildContext context, String query) async{
     clearCustomers();
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
@@ -168,7 +168,7 @@ class CustomerProvider with ChangeNotifier {
         },
       );
 
-      print("search customer code =  $response.statusCode");
+      print("search customer code =  '${response.statusCode}'");
 
       if(response.statusCode == 200){
         final data = json.decode(response.body);

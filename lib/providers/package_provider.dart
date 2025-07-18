@@ -53,6 +53,47 @@ class PackageProvider extends ChangeNotifier{
     }
   }//fetch packages
 
+  //fetch customers with packages
+  Future<List<dynamic>> fetchCustomersWithPackages(BuildContext context, String query) async {
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+
+    final uri = Uri.https(
+      'cloudtik.trizent.net',
+      '/api/customersWithPackages',
+      {
+        'camp_id': campId.toString(),
+        'search': query,
+      },
+    );
+
+    try{
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('Response Status Code: ${response.statusCode}');
+
+      if(response.statusCode == 200){
+        final data = json.decode(response.body);
+        return data;
+      }
+      else{
+        print('no result');
+        return [];
+      }
+    }
+    catch(e){
+      print('catch error');
+      return [];
+    }
+
+  }//fetch customers with packages
+
   void clearPackages() {
     _packages = [];
     notifyListeners();

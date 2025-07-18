@@ -1,187 +1,196 @@
-// lib/screens/search_screen.dart
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/customer_provider.dart';
-import '../providers/package_provider.dart';
 import '../providers/subscription_provider.dart';
+import '../providers/package_provider.dart';
 import '../widgets/customer_select.dart';
-import '../widgets/qrcode_dialog.dart';
 
-class InvoiceScreen extends StatefulWidget {
+class InvoiceScreen extends StatefulWidget{
   const InvoiceScreen({super.key});
 
   @override
   State<InvoiceScreen> createState() => _InvoiceScreenState();
-}
+}//class
 
-class _InvoiceScreenState extends State<InvoiceScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final List<dynamic> customers = [];
-  Map<String, dynamic>? packages;
-
-  bool _dialogShown = false;
+class _InvoiceScreenState extends State<InvoiceScreen>{
+  bool _isLoading = false;
+  List<dynamic> customers = [];
   Map<String, dynamic>? _selectedCustomer;
-  List<Map<String, dynamic>> _selectedPackage = [];
+  List<dynamic> _selectedPackages = [];
 
   final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final customerProvider = Provider.of<CustomerProvider>(context);
+    final packageProvider = Provider.of<PackageProvider>(context);
     final subscriptionProvider = Provider.of<SubscriptionProvider>(context);
-    final customers = customerProvider.customers;
-
-
-    if (customers.isNotEmpty && !_dialogShown) {
-      _dialogShown = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-          context: context,
-          builder: (_) => CustomerSelect(customers: customers),
-        ).then((result) {
-          if (result != null) {
-            setState(() {
-              _selectedCustomer = result['customer'];
-              _selectedPackage = List<Map<String, dynamic>>.from(result['packages']);
-              // _selectedPackage = result['packages'];
-              print('selected customer: $_selectedCustomer');
-              print('selected package: $_selectedPackage');
-            });
-          }
-          customers.clear();
-          customerProvider.clearCustomers();
-          _searchController.clear();
-          _dialogShown = false;
-        });
-      });
-    }
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text('Invoice Screen'),
-              Form(
-                key: _formKey,
-                child: Column(children: [
-                  TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {
-                          // print('search customers');
-                          // customers.clear();
-                          customerProvider.clearCustomers();
-                          customerProvider.searchCustomer(context, _searchController.text);
-                          // print('customers - $customers');
-                        },
-                      ),
+            padding: EdgeInsets.all(8.0),
+            child:Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () async{
+                        FocusScope.of(context).unfocus();
+                        setState(() => _isLoading = true);
+                        try{
+                          List<dynamic> result = await packageProvider.fetchCustomersWithPackages(context, _searchController.text);
+                          setState(() {
+                            customers = result;
+                            // print("result: ${result.length}");
+                            if(result.length > 0){
+                              //show dialog box
+                              showDialog(
+                                context: context,
+                                builder: (_)=> CustomerSelect(customers: customers),
+                              ).then((result){
+                                FocusScope.of(context).unfocus();
+                                if(result != null){
+                                 setState(() {
+                                   _selectedCustomer = result['customer'];
+                                   _selectedPackages = result['packages'];
+                                   print('selected package ${_selectedPackages}');
+                                 });
+                                }
+                              });
+                            }
+                            else{
+                              showDialog(
+                                  context: context, 
+                                  builder: (_)=> AlertDialog(
+                                    title: Text('No customer found'),
+                                    content: Text('Please try again'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: (){
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    )],
+                                  )
+                              );
+                            }
+                          });
+                        }//try
+                        catch(e) {
+                          print('no result, failed from catch');
+                        }//catch
+                      }
                     ),
-                  ),
-                  SizedBox(height: 8,),
-                  // customers.length > 1 ? Text('open panel') : Text('select customer')
-                ],),
-              ),
-
-              if(_selectedCustomer != null)
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                        children: [
-                          Text(
-                            '${_selectedCustomer!['fullname']}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                            ),
-                          ),
-                          Text(
-                            '${_selectedCustomer!['username']}',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10,),
-                        ]),
                   ),
                 ),
 
-              if(_selectedPackage.isNotEmpty)
+                //if has selected customer
+                if(_selectedCustomer != null)
                 Card(
-                  child : Padding(
-                    padding: EdgeInsets.all(8),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _selectedPackage.length,
-                            itemBuilder: (context, index) {
-                              final package = _selectedPackage[index];
-                              return Card(
-                                child: ListTile(
-                                    title: Text(
-                                      '${package['name']} : ${package['price']} AED',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                        '${package['duration']} Days'
-                                    ),
-                                    trailing: ElevatedButton(
-                                      onPressed: () async{
-                                        // print('submit subscription ${package['id']}');
-                                        // print('submit customer ${_selectedCustomer!['id']}');
-
-                                        // final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
-                                        final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
-
-                                        if(success){
-                                          print('package submitted...');
-                                          final qrData = 'https://cloudtik.trizent.net/userlogin';
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => QrcodeDialog(qrData: qrData),
-                                          );
-                                          // Navigator.pop(context);
-                                          _selectedCustomer = null;
-                                          _selectedPackage.clear();
-                                          // _searchController.clear();
-                                          // _dialogShown = false;
-                                          customers.clear();
-                                          customerProvider.clearCustomers();
-                                        }
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all(Colors.blue[800]),
-                                        foregroundColor: MaterialStateProperty.all(Colors.white),
-                                      ),
-                                      child: Text('Submit'),
-                                    )
-                                ),
-                              );
-                            }
+                        Text(
+                            _selectedCustomer!['fullname'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                            _selectedCustomer!['username'],
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                         ),
                       ],
                     ),
                   ),
                 ),
+                if(_selectedCustomer == null)
+                Card(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8.0),
+                    alignment: Alignment.center,
+                    child: Text('Please select a customer'),
+                  ),
+                ),
 
-              // Text('${_selectedPackage.length}'),
-
-            ],
-          ),
+                //if has selected packages
+                if(_selectedPackages.isNotEmpty)
+                Card(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _selectedPackages.length,
+                          itemBuilder: (context, index) {
+                           final package = _selectedPackages[index];
+                           return Card(
+                             child: ListTile(
+                               title: Text(
+                                   package['name'],
+                                 style: TextStyle(
+                                   fontSize: 16,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                               subtitle: Text(
+                                   package['price'].toString() + ' AED',
+                                 style: TextStyle(
+                                   fontSize: 14,
+                                   fontWeight: FontWeight.bold,
+                                 )
+                               ),
+                               trailing: ElevatedButton(
+                                 onPressed: () async{
+                                    final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+                                    if(success){
+                                      showDialog(
+                                          context: context,
+                                          builder: (_)=>AlertDialog(
+                                            title: Text('Subscription Added'),
+                                            content: Text('Subscription added successfully'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: (){
+                                                  Navigator.of(context).pop();
+                                                  //clear every thing
+                                                  _selectedCustomer = null;
+                                                  _selectedPackages = [];
+                                                  _searchController.clear();
+                                                },
+                                                child: Text('OK'),
+                                              )],
+                                          )
+                                      );
+                                    }
+                                 },
+                                 child: Text('Submit'),
+                               ),
+                             ),
+                           );
+                          }
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+              ],
+        ),
         ),
       ),
     );
-  }
+  }//build
 }//class

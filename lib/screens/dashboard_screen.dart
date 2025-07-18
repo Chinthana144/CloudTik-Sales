@@ -27,30 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final subscriptionProvider = Provider.of<SubscriptionProvider>(context);
     final sections = subscriptionProvider.sections;
-
-    // List<PieChartSectionData> getPieData() {
-    //   return List.generate(
-    //       4,
-    //           (i){
-    //         double value = (i+1)*10;
-    //         final radius = 70.0;
-    //         final fontSize = 18.0;
-    //         return PieChartSectionData(
-    //           color: Colors.primaries[i],
-    //           value: value,
-    //           title: '$value',
-    //           radius: radius,
-    //           titleStyle: TextStyle(
-    //             fontSize: fontSize,
-    //             fontWeight: FontWeight.bold,
-    //             color: Colors.white,
-    //           ),
-    //           badgeWidget: Text('$value'),
-    //           badgePositionPercentageOffset: 1.2,
-    //         );
-    //       }
-    //   );
-    // }
+    // List<dynamic> totals = subscriptionProvider.totals;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -71,6 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     IconButton(
                         onPressed: (){
                           Provider.of<SubscriptionProvider>(context, listen: false).fetchChartData(context);
+                          Provider.of<SubscriptionProvider>(context, listen: false).getSubscriptionsTotals(context);
                         },
                         icon: Icon(Icons.refresh),
                     ),
@@ -83,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   : DonutPieChart(data : sections),
                 ),
                 SizedBox(height: 20,),
-                Text('Daily Sale'),
+                Text('Daily Sale '),
                 SizedBox(height: 20,),
                 Text('Token Count'),
               ]),
