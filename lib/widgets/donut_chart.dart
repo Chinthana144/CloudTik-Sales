@@ -17,8 +17,8 @@ class _DonutPieChartState extends State<DonutPieChart> {
     return PieChart(
       PieChartData(
         sections: showingSections(),
-        centerSpaceRadius: 50,
-        sectionsSpace: 2,
+        centerSpaceRadius: 20,
+        sectionsSpace:1,
         pieTouchData: PieTouchData(
           touchCallback: (event, pieTouchResponse) {
             setState(() {
@@ -45,10 +45,11 @@ class _DonutPieChartState extends State<DonutPieChart> {
 
       return PieChartSectionData(
         value: base.value,
-        title: base.title,
+        // title: base.title,
         color: base.color,
-        radius: isTouched ? 65 : 50, // 👈 Increase radius on touch
+        radius: isTouched ? 30: 25,
         titleStyle: base.titleStyle,
+        badgePositionPercentageOffset: 1.2,
       );
     });
   }

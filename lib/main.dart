@@ -1,3 +1,4 @@
+import 'package:cloudtik_sales/providers/chart_provider.dart';
 import 'package:cloudtik_sales/providers/package_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => CustomerProvider()),
         ChangeNotifierProvider(create: (context) => PackageProvider()),
         ChangeNotifierProvider(create: (context) => SubscriptionProvider()),
+        ChangeNotifierProvider(create: (context) => ChartProvider()),
       ],
       child: const MyApp(),
     ),
