@@ -56,14 +56,14 @@ class SubscriptionProvider extends ChangeNotifier{
     }
   }//add subscription
 
-  Future<bool> fetchSubscriptionsByUserDate(BuildContext context) async{
+  Future<bool> fetchSubscriptionsByUserDate(BuildContext context, String? searchDate) async{
     clearSubscriptions();
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     final userId = sessionProvider.userId;
     final campId = sessionProvider.campId;
 
     final today = DateTime.now();
-    final formattedDate = DateFormat('yyyy-MM-dd').format(today);
+    final formattedDate = searchDate ?? DateFormat('yyyy-MM-dd').format(today);
 
     final token = Provider.of<AuthProvider>(context, listen: false).token;
     final uri = Uri.https(

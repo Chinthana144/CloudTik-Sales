@@ -22,7 +22,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context);
+      Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
     });
   }
 

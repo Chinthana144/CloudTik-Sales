@@ -26,9 +26,11 @@ class _DashboardScreenState extends State<DashboardScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<ChartProvider>(context, listen: false).fetchBarChartData(context);
-    Provider.of<ChartProvider>(context, listen: false).fetchChartData(context);
-    Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context);
+    setState(() {
+      Provider.of<ChartProvider>(context, listen: false).fetchBarChartData(context);
+      Provider.of<ChartProvider>(context, listen: false).fetchChartData(context);
+      Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+    });
   }
 
   @override
@@ -75,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen>{
               Expanded(
                 child: SizedBox(
                   height: 200,
-                  child: BarChart7Days(data: myData),
+                  child: myData == null ? Text('no data') : BarChart7Days(data: myData),
                 ),
               ),
             ],

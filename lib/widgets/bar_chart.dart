@@ -40,13 +40,15 @@ class BarChart7Days extends StatelessWidget{
         ),
       ),
     );
+
   }//build
 
 
   List<BarChartGroupData> get barGroups {
     List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < data!['dates'].length; i++) {
-      final value = double.parse(data!['total_prices'][i]);
+      final value = double.parse(data!['total_prices'][i]) ?? 0;
+
       barGroups.add(
           BarChartGroupData(
               x: i,
@@ -61,6 +63,14 @@ class BarChart7Days extends StatelessWidget{
           ),
       );
     } //for
+
+    if(barGroups.isEmpty){
+       barGroups.add(
+         BarChartGroupData(x: 0, barRods: [
+           BarChartRodData(toY: 0, color: Colors.grey),
+         ]),
+      );
+    }
     return barGroups;
   }//barGroups
 }//class

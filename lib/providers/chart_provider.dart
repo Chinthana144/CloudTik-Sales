@@ -42,9 +42,10 @@ class ChartProvider with ChangeNotifier {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
-      // _chartData = data.map((item) => BarChartData.fromJson(item)).toList();
+      print('chart provider = ${data}');
+
       _myData = data;
+
       notifyListeners();
     } else {
       throw Exception('Failed to load chart data');
