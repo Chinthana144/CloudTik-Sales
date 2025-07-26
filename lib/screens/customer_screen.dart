@@ -79,19 +79,19 @@ class _CustomerScreenState extends State<CustomerScreen>{
                           ),
                         ),
                         trailing: SizedBox(
-                            width: 100,
+                            width: 50,
                             child: Row(
                               children: [
-                                IconButton(
-                                  onPressed: (){
-                                    final qrData = 'https://cloudtik.trizent.net/userlogin';
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => QrcodeDialog(qrData: qrData, title: '${customer['fullname']}'),
-                                    );
-                                  },
-                                  icon: Icon(Icons.qr_code),
-                                ),
+                                // IconButton(
+                                //   onPressed: (){
+                                //     final qrData = 'https://cloudtik.trizent.net/userlogin';
+                                //     showDialog(
+                                //         context: context,
+                                //         builder: (context) => QrcodeDialog(qrData: qrData, title: '${customer['fullname']}'),
+                                //     );
+                                //   },
+                                //   icon: Icon(Icons.qr_code),
+                                // ),
                                 IconButton(
                                   onPressed: (){
                                     showDialog(

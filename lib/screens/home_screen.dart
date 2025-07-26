@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     MaterialPageRoute(builder: (context) => LoginScreen())
                 );
               },
-              icon: Icon(Icons.logout),
+              icon: Icon(Icons.power_settings_new),
               color: Color(0xFF88deff),
             ),
           ],

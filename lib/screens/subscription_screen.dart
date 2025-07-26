@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/subscription_provider.dart';
 import '../widgets/qrcode_dialog.dart';
+import '../widgets/view_subscription.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -34,17 +35,20 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Text('Subscription Screen'),
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search',
-              border: OutlineInputBorder(),
-              suffixIcon: IconButton(
+          // Text('Subscription Screen'),
+          Container(
+            padding: EdgeInsets.all(8),
+            child:TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: OutlineInputBorder(),
+                suffixIcon: IconButton(
                   onPressed: (){
                     subscriptionProvider.searchSubscriptionByUser(context, _searchController.text);
                   },
                   icon: const Icon(Icons.search),
+                ),
               ),
             ),
           ),
@@ -77,23 +81,26 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         '${subscription['customer_name']} : ${subscription['expiry_datetime'] ?? 'N/A'} '
                       ),
                       trailing: SizedBox(
-                        width: 100,
+                        width: 50,
                         child: Row(
                           children: [
                             IconButton(
-                              onPressed: (){
-                                final qrData = 'https://cloudtik.trizent.net/userlogin';
+                              onPressed: () async {
+                                final subscriptionId = subscription['id'].toString(); // Make sure it's a String if required
+                                final data = await subscriptionProvider.getSubscriptionById(context, subscriptionId);
+
+                                FocusScope.of(context).unfocus();
                                 showDialog(
                                   context: context,
-                                  builder: (context) => QrcodeDialog(qrData: qrData, title: '${subscription['customer_name']}'),
+                                  builder: (context) => ViewSubscription(
+                                    subscriptionId: subscriptionId,
+                                    sub: data,
+                                  ),
                                 );
                               },
-                              icon: Icon(Icons.qr_code),
+                              icon: Icon(Icons.remove_red_eye_rounded),
                             ),
-                            IconButton(
-                                onPressed: (){print('open edit subscription dialog...');},
-                                icon: Icon(Icons.edit),
-                            ),
+
                           ]),
                       ),
                     ),

@@ -30,6 +30,13 @@ class CustomerSelect extends StatelessWidget{
               title: Text(item['customer']['fullname']),
               subtitle: Text(item['customer']['username']),
               trailing: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[700],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: (){
                     Navigator.of(context).pop({
                       'customer' : item['customer'],

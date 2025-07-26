@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/subscription_provider.dart';
 import '../providers/package_provider.dart';
 import '../widgets/customer_select.dart';
+import '../widgets/daily_total.dart';
 
 class InvoiceScreen extends StatefulWidget{
   const InvoiceScreen({super.key});
@@ -17,6 +18,7 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
   List<dynamic> customers = [];
   Map<String, dynamic>? _selectedCustomer;
   List<dynamic> _selectedPackages = [];
+  List<dynamic> todaySaleData = [];
 
   final _searchController = TextEditingController();
 
@@ -24,6 +26,7 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
   Widget build(BuildContext context) {
     final packageProvider = Provider.of<PackageProvider>(context);
     final subscriptionProvider = Provider.of<SubscriptionProvider>(context);
+    todaySaleData = subscriptionProvider.subscriptions;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -87,6 +90,9 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                     ),
                   ),
                 ),
+
+                //add daily sales
+                DailyTotal(data: todaySaleData),
 
                 //if has selected customer
                 if(_selectedCustomer != null)
@@ -154,6 +160,13 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                  )
                                ),
                                trailing: ElevatedButton(
+                                 style: ElevatedButton.styleFrom(
+                                   backgroundColor: Colors.blue[700],
+                                   foregroundColor: Colors.white,
+                                   shape: RoundedRectangleBorder(
+                                     borderRadius: BorderRadius.circular(10),
+                                   ),
+                                 ),
                                  onPressed: () async{
                                     final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
                                     if(success){
@@ -170,6 +183,9 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                                   _selectedCustomer = null;
                                                   _selectedPackages = [];
                                                   _searchController.clear();
+                                                  setState(() {
+                                                    Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                                  });
                                                 },
                                                 child: Text('OK'),
                                               )],
@@ -177,7 +193,12 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                       );
                                     }
                                  },
-                                 child: Text('Submit'),
+                                 child: Text(
+                                     '${package['duration'].toString()} Days',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                 ),
                                ),
                              ),
                            );

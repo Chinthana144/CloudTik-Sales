@@ -15,7 +15,7 @@ class DailyTotal extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(children: [
-            Text('Daily count'),
+            Text('Daily Invoices'),
             Text(
                 getCount() ?? "0",
                 style: TextStyle(
