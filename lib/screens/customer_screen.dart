@@ -35,25 +35,28 @@ class _CustomerScreenState extends State<CustomerScreen>{
     return Scaffold(
       body: Column(
         children: [
-          TextField(
-            controller: _searchController,
-            onChanged: (value) {
-              customerProvider.searchCustomer(context, value);
-              // customerProvider.fetchCustomers(context);
-            },
-            decoration: InputDecoration(
-              hintText: 'Search',
-              border: OutlineInputBorder(),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _searchController.clear();
-                  customerProvider.filterCustomers('');
-                },
+          Container(
+            padding: EdgeInsets.all(8),
+            child: TextField(
+              controller: _searchController,
+              // onChanged: (value) {
+              //
+              //   // customerProvider.fetchCustomers(context);
+              // },
+              decoration: InputDecoration(
+                hintText: 'Search',
+                border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    customerProvider.searchCustomer(context, _searchController.text);
+                    _searchController.clear();
+                  },
+                ),
               ),
             ),
           ),
-          SizedBox(height: 8,),
+          SizedBox(height: 8),
           Expanded(
             child: Scrollbar(
               child: customers.isEmpty ?
@@ -82,16 +85,6 @@ class _CustomerScreenState extends State<CustomerScreen>{
                             width: 50,
                             child: Row(
                               children: [
-                                // IconButton(
-                                //   onPressed: (){
-                                //     final qrData = 'https://cloudtik.trizent.net/userlogin';
-                                //     showDialog(
-                                //         context: context,
-                                //         builder: (context) => QrcodeDialog(qrData: qrData, title: '${customer['fullname']}'),
-                                //     );
-                                //   },
-                                //   icon: Icon(Icons.qr_code),
-                                // ),
                                 IconButton(
                                   onPressed: (){
                                     showDialog(

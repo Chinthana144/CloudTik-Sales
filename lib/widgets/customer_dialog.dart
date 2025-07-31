@@ -31,6 +31,7 @@ class _CustomerDialogState extends State<CustomerDialog>{
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _pwdController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -54,18 +55,35 @@ class _CustomerDialogState extends State<CustomerDialog>{
                 hint: "Enter your name",
                 controller: _nameController,
               ),
+              //contact no
               SizedBox(height: 10,),
               CustomNumberField(
                   label: "Phone No",
                   hint: "0512345678",
                   controller: _phoneController,
               ),
+              //password
               SizedBox(height: 10,),
               CustomTextField(
                 label: "Password",
                 hint: "Enter your password",
                 controller: _pwdController,
-                obscureText: true,
+                obscureText: _obscurePassword,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    value: !_obscurePassword,
+                    onChanged: (val){
+                      setState(() {
+                        _obscurePassword = !(val ?? false);
+
+                      });
+                    },
+                  ),
+                  const Text('Show Password'),
+                ],
               ),
               SizedBox(height: 10,),
             ]),
