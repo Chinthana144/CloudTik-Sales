@@ -5,6 +5,7 @@ import '../providers/subscription_provider.dart';
 import '../providers/package_provider.dart';
 import '../widgets/customer_select.dart';
 import '../widgets/daily_total.dart';
+import '../widgets/status_dialog.dart';
 
 class InvoiceScreen extends StatefulWidget{
   const InvoiceScreen({super.key});
@@ -171,27 +172,36 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                     final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
                                     if(success){
                                       showDialog(
-                                          context: context,
-                                          builder: (_)=>AlertDialog(
-                                            title: Text('Subscription Added'),
-                                            content: Text('Subscription added successfully'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: (){
-                                                  Navigator.of(context).pop();
-                                                  //clear every thing
-                                                  _selectedCustomer = null;
-                                                  _selectedPackages = [];
-                                                  _searchController.clear();
-                                                  setState(() {
-                                                    Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
-                                                  });
-                                                },
-                                                child: Text('OK'),
-                                              )],
-                                          )
+                                        context: context,
+                                        builder: (context) => const StatusDialog(
+                                          success: true,
+                                          message: 'Subscription added successfully!',
+                                        ),
                                       );
-                                    }
+                                      //clear every thing
+                                      _selectedCustomer = null;
+                                      _selectedPackages = [];
+                                      _searchController.clear();
+                                      setState(() {
+                                        Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                      });
+                                    }//if
+                                    else{
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => const StatusDialog(
+                                          success: false,
+                                          message: 'Subscription failed! Please try again.',
+                                        ),
+                                      );
+                                      //clear every thing
+                                      _selectedCustomer = null;
+                                      _selectedPackages = [];
+                                      _searchController.clear();
+                                      setState(() {
+                                        Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                      });
+                                    }//else
                                  },
                                  child: Text(
                                      '${package['duration'].toString()} Days',

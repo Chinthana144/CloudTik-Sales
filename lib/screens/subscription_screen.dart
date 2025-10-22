@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/subscription_provider.dart';
 import '../widgets/qrcode_dialog.dart';
 import '../widgets/view_subscription.dart';
+import '../widgets/reset_subscription.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -68,43 +69,79 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 itemCount: subscriptions.length,
                 itemBuilder: (context, index) {
                   final subscription = subscriptions[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(
-                        '${subscription['username']} : ${subscription['price']} AED',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '${subscription['customer_name']} : ${subscription['expiry_datetime'] ?? 'N/A'} '
-                      ),
-                      trailing: SizedBox(
-                        width: 50,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () async {
-                                final subscriptionId = subscription['id'].toString(); // Make sure it's a String if required
-                                final data = await subscriptionProvider.getSubscriptionById(context, subscriptionId);
+                  final status = subscription['status'];
 
-                                FocusScope.of(context).unfocus();
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => ViewSubscription(
-                                    subscriptionId: subscriptionId,
-                                    sub: data,
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.remove_red_eye_rounded),
+                  Color getStatusColor() {
+                    if (status == 1) return Color(0xFF1976D2);
+                    if (status == 2) return Color(0xFF43A047);
+                    if (status == 3) return Color(0xFFFFC107);
+                    return Colors.red;
+                  }
+
+                  return Container(
+                      decoration: BoxDecoration(
+                        color: getStatusColor(),
+                        borderRadius: BorderRadius.circular(8),
+                        // border: Border.all(
+                        //   color: Colors.blueAccent, // 👈 optional border color
+                        //   width: 1,
+                        // ),
+                      ),
+                      child:Card(
+                        child: ListTile(
+                          title: Text(
+                            '${subscription['username']} : ${subscription['price']} AED',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: getStatusColor(),
+                              fontSize: 20,
                             ),
+                          ),
+                          subtitle: Text(
+                              '${subscription['customer_name']} : ${subscription['expiry_datetime'] ?? 'N/A'} '
+                          ),
+                          trailing: SizedBox(
+                            width: 100,
+                            child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () async{
+                                        final subscriptionId = subscription['id'].toString(); // Make sure it's a String if required
+                                        final data = await subscriptionProvider.getSubscriptionById(context, subscriptionId);
 
-                          ]),
-                      ),
-                    ),
+                                        FocusScope.of(context).unfocus();
+                                        showDialog(
+                                            context: context,
+                                            builder: (context)=>ResetSubscription(
+                                              subscriptionId: subscriptionId,
+                                              sub: data,
+                                            ),
+                                        );
+                                      },
+                                      icon:Icon(Icons.refresh)),
+                                  IconButton(
+                                    onPressed: () async {
+                                      final subscriptionId = subscription['id'].toString(); // Make sure it's a String if required
+                                      final data = await subscriptionProvider.getSubscriptionById(context, subscriptionId);
+
+                                      FocusScope.of(context).unfocus();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => ViewSubscription(
+                                          subscriptionId: subscriptionId,
+                                          sub: data,
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.remove_red_eye_rounded),
+                                  ),
+
+                                ]),
+                          ),
+                        ),
+                      )
                   );
+
                 }
               )
             ),

@@ -56,6 +56,38 @@ class SubscriptionProvider extends ChangeNotifier{
     }
   }//add subscription
 
+  Future<bool> resetSubscription(BuildContext context, String subscriptionID, String customerID) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+
+    final uri = Uri.parse('https://cloudtik.trizent.net/api/resetMacAddressAPI');
+
+    try{
+      final response = await http.post(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+          body: {
+            "reset_customer_id" : customerID,
+            "reset_subscription_id" : subscriptionID,
+          }
+      );
+      if(response.statusCode == 200){
+        print('subscription reset successfully...');
+        return true;
+      }
+      else{
+        print('subscription reset failed...');
+        return false;
+      }
+    }
+    catch(e){
+      print('subscription reset failed...catch');
+      return false;
+    }
+  }
+
   Future<bool> fetchSubscriptionsByUserDate(BuildContext context, String? searchDate) async{
     clearSubscriptions();
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
