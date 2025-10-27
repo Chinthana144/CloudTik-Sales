@@ -56,6 +56,52 @@ class SubscriptionProvider extends ChangeNotifier{
     }
   }//add subscription
 
+  Future<bool> rechargeSubscription(BuildContext context, String customerId, String packageId) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+
+    final uri = Uri.parse('https://cloudtik.trizent.net/api/rechargeSubscriptionFromAPI');
+
+    try{
+      final response = await http.post(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+          body: {
+            "user_id" : userId.toString(),
+            "camp_id" : campId.toString(),
+            "customer_id" : customerId,
+            "package_id" : packageId,
+          }
+      );
+      // print('code ${response.body}');
+
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          print("✅ Success: ${data['message']}");
+          return true;
+        } else {
+          print("❌ Failed: ${data['message']}");
+          return false;
+        }
+      }
+      else{
+        print('subscription recharge failed...');
+        return false;
+      }
+    }
+    catch(e){
+      print('subscription submission failed...catch');
+      return false;
+    }
+  }//recharge subscription
+
   Future<bool> resetSubscription(BuildContext context, String subscriptionID, String customerID) async{
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
     final token = Provider.of<AuthProvider>(context, listen: false).token;

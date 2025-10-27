@@ -76,7 +76,7 @@ class PackageProvider extends ChangeNotifier{
           'Authorization': 'Bearer $token',
         },
       );
-      print('Response Status Code: ${response.statusCode}');
+      print('Response Status Code: ${response}');
 
       if(response.statusCode == 200){
         final data = json.decode(response.body);

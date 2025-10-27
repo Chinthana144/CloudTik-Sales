@@ -16,6 +16,7 @@ class InvoiceScreen extends StatefulWidget{
 
 class _InvoiceScreenState extends State<InvoiceScreen>{
   bool _isLoading = false;
+  bool has_running_subscription = false;
   List<dynamic> customers = [];
   Map<String, dynamic>? _selectedCustomer;
   List<dynamic> _selectedPackages = [];
@@ -61,6 +62,7 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                  setState(() {
                                    _selectedCustomer = result['customer'];
                                    _selectedPackages = result['packages'];
+                                   has_running_subscription = result['has_running_subscription'];
                                    print('selected package ${_selectedPackages}');
                                  });
                                 }
@@ -146,70 +148,121 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                            final package = _selectedPackages[index];
                            return Card(
                              child: ListTile(
-                               title: Text(
-                                   package['name'],
-                                 style: TextStyle(
-                                   fontSize: 16,
-                                   fontWeight: FontWeight.bold,
-                                 ),
-                               ),
-                               subtitle: Text(
-                                   package['price'].toString() + ' AED',
-                                 style: TextStyle(
-                                   fontSize: 14,
-                                   fontWeight: FontWeight.bold,
-                                 )
-                               ),
-                               trailing: ElevatedButton(
-                                 style: ElevatedButton.styleFrom(
-                                   backgroundColor: Colors.blue[700],
-                                   foregroundColor: Colors.white,
-                                   shape: RoundedRectangleBorder(
-                                     borderRadius: BorderRadius.circular(10),
-                                   ),
-                                 ),
-                                 onPressed: () async{
-                                    final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
-                                    if(success){
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => const StatusDialog(
-                                          success: true,
-                                          message: 'Subscription added successfully!',
-                                        ),
-                                      );
-                                      //clear every thing
-                                      _selectedCustomer = null;
-                                      _selectedPackages = [];
-                                      _searchController.clear();
-                                      setState(() {
-                                        Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
-                                      });
-                                    }//if
-                                    else{
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => const StatusDialog(
-                                          success: false,
-                                          message: 'Subscription failed! Please try again.',
-                                        ),
-                                      );
-                                      //clear every thing
-                                      _selectedCustomer = null;
-                                      _selectedPackages = [];
-                                      _searchController.clear();
-                                      setState(() {
-                                        Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
-                                      });
-                                    }//else
-                                 },
-                                 child: Text(
-                                     '${package['duration'].toString()} Days',
+                               title:
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      package['name'],
                                       style: TextStyle(
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                 ),
-                               ),
+                                    ),
+                                    Text(
+                                        package['price'].toString() + ' AED',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                    ),
+                                  ],
+                                ),
+
+                               subtitle:
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green[700],
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          onPressed: () async{
+                                            final success = await subscriptionProvider.rechargeSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+                                            if(success){
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => const StatusDialog(
+                                                  success: true,
+                                                  message: 'Subscription recharged successfully!',
+                                                ),
+                                              );
+                                              //clear every thing
+                                              _selectedCustomer = null;
+                                              _selectedPackages = [];
+                                              _searchController.clear();
+                                              setState(() {
+                                                Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                              });
+                                            }//if success
+                                            else{
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => const StatusDialog(
+                                                  success: false,
+                                                  message: 'Subscription recharge failed!',
+                                                ),
+                                              );
+                                            }//else
+                                          },
+                                          child: Text('Recharge ${package['duration'].toString()} Days'),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.blue[700],
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        onPressed: () async{
+                                          final success = await subscriptionProvider.addSubscription(context, _selectedCustomer!['id'].toString(), package['id'].toString());
+                                          if(success){
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => const StatusDialog(
+                                                success: true,
+                                                message: 'Subscription added successfully!',
+                                              ),
+                                            );
+                                            //clear every thing
+                                            _selectedCustomer = null;
+                                            _selectedPackages = [];
+                                            _searchController.clear();
+                                            setState(() {
+                                              Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                            });
+                                          }//if
+                                          else{
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => const StatusDialog(
+                                                success: false,
+                                                message: 'Subscription failed! Please try again.',
+                                              ),
+                                            );
+                                            //clear every thing
+                                            _selectedCustomer = null;
+                                            _selectedPackages = [];
+                                            _searchController.clear();
+                                            setState(() {
+                                              Provider.of<SubscriptionProvider>(context, listen: false).fetchSubscriptionsByUserDate(context, null);
+                                            });
+                                          }//else
+                                        },
+                                        child: Text(
+                                          'Add ${package['duration'].toString()} Days',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                              ),
                            );
                           }
