@@ -6,6 +6,7 @@ import '../providers/package_provider.dart';
 import '../widgets/customer_select.dart';
 import '../widgets/daily_total.dart';
 import '../widgets/status_dialog.dart';
+import '../widgets/customer_history.dart';
 
 class InvoiceScreen extends StatefulWidget{
   const InvoiceScreen({super.key});
@@ -62,8 +63,6 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                                  setState(() {
                                    _selectedCustomer = result['customer'];
                                    _selectedPackages = result['packages'];
-                                   has_running_subscription = result['has_running_subscription'];
-                                   print('selected package ${_selectedPackages}');
                                  });
                                 }
                               });
@@ -103,24 +102,53 @@ class _InvoiceScreenState extends State<InvoiceScreen>{
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(8.0),
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                      Column(
+                        children: [
+                          Text(
                             _selectedCustomer!['fullname'],
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
+                          Text(
                             _selectedCustomer!['username'],
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF7E57C2),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () async{
+                            final data = await subscriptionProvider.getSubscriptionByCustomer(context, _selectedCustomer!['id'].toString());
+                            if(data.length > 0)
+                              {
+                                showDialog(
+                                    context: context,
+                                    builder: (cotext) => CustomerHistory(
+                                        subscriptions: data,
+                                    ),
+                                );
+                              }
+
+                          },
+                          child: Text('History')
+                      ),
+                    ],), 
+                      
+                    
                   ),
                 ),
                 if(_selectedCustomer == null)

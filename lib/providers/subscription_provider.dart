@@ -326,4 +326,43 @@ class SubscriptionProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<dynamic> getSubscriptionByCustomer(BuildContext context, String customerID) async{
+    final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
+    final userId = sessionProvider.userId;
+    final campId = sessionProvider.campId;
+
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final uri = Uri.https(
+      'cloudtik.trizent.net',
+      '/api/getSubscriptionByCustomer',
+      {
+        'customer_id': customerID,
+      },
+    );
+
+    try{
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+
+        print('data = $data');
+        return data;
+        notifyListeners();
+      }
+      else{
+        return [];
+        notifyListeners();
+      }
+    }
+    catch(e){
+      return [];
+      notifyListeners();
+    }
+  }//get sub by customer
 }//class

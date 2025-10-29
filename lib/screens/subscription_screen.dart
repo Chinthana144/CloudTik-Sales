@@ -72,20 +72,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   final status = subscription['status'];
 
                   Color getStatusColor() {
-                    if (status == 1) return Color(0xFF1976D2);
-                    if (status == 2) return Color(0xFF43A047);
-                    if (status == 3) return Color(0xFFFFC107);
-                    return Colors.red;
+                    if (status == 1) return Color(0xFF1976D2);//active
+                    if (status == 2) return Color(0xFF43A047);//running
+                    if (status == 3) return Color(0xFFFFC107);//expired
+                    if (status == 5) return Color(0xFF6C757D);//transferred
+                    return Colors.red; //canceled
                   }
 
                   return Container(
                       decoration: BoxDecoration(
                         color: getStatusColor(),
                         borderRadius: BorderRadius.circular(8),
-                        // border: Border.all(
-                        //   color: Colors.blueAccent, // 👈 optional border color
-                        //   width: 1,
-                        // ),
                       ),
                       child:Card(
                         child: ListTile(
