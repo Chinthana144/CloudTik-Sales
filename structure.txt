@@ -1,0 +1,30 @@
+// structure of application
+
+//Pages
+* login page ------------------ created
+* camp portal page ------------ created
+* dashboard page
+* invoice page ---------------- created
+* subscription page
+* user profile page
+* customer page --------------- created
+* report page
+
+//home page
+user name
+daily sale
+token count
+graph (optional)
+
+//bottom navigation bar
+
+//logo colors
+background color: #262d35
+forground color: #26b0de
+
+//TODO LIST
+* add appbar image method to camp portal
+* validate forms (customers)
+* login username and pwd store --------------- done
+* decorate invoice page
+* scrollbar for invoice page ----------------- done

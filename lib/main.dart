@@ -1,6 +1,12 @@
+import 'package:cloudtik_sales/providers/chart_provider.dart';
+import 'package:cloudtik_sales/providers/package_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/session_provider.dart';
+import 'providers/customer_provider.dart';
+import 'providers/package_provider.dart';
+import 'providers/subscription_provider.dart';
 import 'screens/login_screen.dart';
 
 void main() {
@@ -8,6 +14,11 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => SessionProvider()),
+        ChangeNotifierProvider(create: (context) => CustomerProvider()),
+        ChangeNotifierProvider(create: (context) => PackageProvider()),
+        ChangeNotifierProvider(create: (context) => SubscriptionProvider()),
+        ChangeNotifierProvider(create: (context) => ChartProvider()),
       ],
       child: const MyApp(),
     ),
@@ -21,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'CloudTik Sales',
       theme: ThemeData(
         // This is the theme of your application.
