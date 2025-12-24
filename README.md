@@ -1,16 +1,85 @@
-# cloudtik_sales
+# CloudTik Sales – Mobile Application
+CloudTik Sales is a Flutter-based mobile application designed for sales teams working in labor camps.
+It connects with the CloudTik web backend to manage customer registrations, subscriptions, MAC address resets, and sales trackin
 
 salesman application for cloudtik
 
-## Getting Started
+## Features
+### Customer Management
+- Add new customers
+- Edit customer information
+- Assign customers to camps
+- Search and filter customers
 
-This project is a starting point for a Flutter application.
+### Device & MAC Management
+- Register customer device MAC address
+- Reset MAC address (RouterOS API via backend)
+- View device activity
 
-A few resources to get you started if this is your first Flutter project:
+### Subscription Management
+- Create subscription
+- Reset subscription
+- Package selection by customer type
+- View subscription history
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Invoices
+- Generate invoice from the mobile app
+- View invoice history
+- Syncs with CloudTik web system
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Sales Tracking
+- Daily sales
+- Total sales
+- Sales history
+- Performance dashboard
+
+### User Access Control
+- Login based on designation
+- Only authorized roles can register or manage customers
+
+## Screenshots
+![Login](screenshots/login.jpg)
+![Camp Select](screenshots/camp_select.jpg)
+![Dashboard](screenshots/dashboard.jpg)
+![Incoice Page](screenshots/package_select.jpg)
+![Subscription Page](screenshots/subscription_page.jpg)
+![Subscription View](screenshots/subscription_view.jpg)
+![Customer History](screenshots/customer_history.jpg)
+![Profile](screenshots/profile.jpg)
+
+
+## Tech Stack
+- **Framework:** Flutter (3.x)
+- **Language:** Dart
+- **Architecture:** Provider / MVVM (your choice)
+- **Backend:** CloudTik Laravel API
+- **State Management:** Provider
+- **HTTP Client:** Dio / http package
+- **Database:** Local storage (SharedPreferences)
+
+## Installation Guide
+
+1. Clone the repository
+
+
+    git clone https://github.com/your-username/CloudTik-Sales.git
+    cd CloudTik-Sales
+
+2. Install dependencies
+
+
+    flutter pub get
+
+3. Run the app
+
+
+    flutter run
+
+## Build APK
+    flutter build apk --release
+The APK will be available in:
+
+    /build/app/outputs/flutter-apk/app-release.apk
+
+**Thanks for visiting my profile!**
+contact me: chinthana144@gmail.com 
