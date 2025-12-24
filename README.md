@@ -38,14 +38,14 @@ salesman application for cloudtik
 - Only authorized roles can register or manage customers
 
 ## Screenshots
-![Login](screenshots/login.jpg)
-![Camp Select](screenshots/camp_select.jpg)
-![Dashboard](screenshots/dashboard.jpg)
-![Incoice Page](screenshots/package_select.jpg)
-![Subscription Page](screenshots/subscription_page.jpg)
-![Subscription View](screenshots/subscription_view.jpg)
-![Customer History](screenshots/customer_history.jpg)
-![Profile](screenshots/profile.jpg)
+    ![Login](screenshots/login.jpg)
+    ![Camp Select](screenshots/camp_select.jpg)
+    ![Dashboard](screenshots/dashboard.jpg)
+    ![Incoice Page](screenshots/package_select.jpg)
+    ![Subscription Page](screenshots/subscription_page.jpg)
+    ![Subscription View](screenshots/subscription_view.jpg)
+    ![Customer History](screenshots/customer_history.jpg)
+    ![Profile](screenshots/profile.jpg)
 
 
 ## Tech Stack
