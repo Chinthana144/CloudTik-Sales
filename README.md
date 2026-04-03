@@ -78,6 +78,8 @@ salesman application for CloudTik
 
 
     git clone https://github.com/your-username/CloudTik-Sales.git
+
+
     cd CloudTik-Sales
 
 2. Install dependencies
@@ -91,7 +93,9 @@ salesman application for CloudTik
     flutter run
 
 ## Build APK
+
     flutter build apk --release
+
 The APK will be available in:
 
     /build/app/outputs/flutter-apk/app-release.apk
