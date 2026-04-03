@@ -2,7 +2,9 @@
 CloudTik Sales is a Flutter-based mobile application designed for sales teams working in labor camps.
 It connects with the CloudTik web backend to manage customer registrations, subscriptions, MAC address resets, and sales trackin
 
-salesman application for cloudtik
+salesman application for CloudTik
+
+--- 
 
 ## Features
 ### Customer Management
@@ -37,16 +39,29 @@ salesman application for cloudtik
 - Login based on designation
 - Only authorized roles can register or manage customers
 
-## Screenshots
-![Login](screenshots/login.jpg)
-![Camp Select](screenshots/camp_select.jpg)
-![Dashboard](screenshots/dashboard.jpg)
-![Incoice Page](screenshots/package_select.jpg)
-![Subscription Page](screenshots/subscription_page.jpg)
-![Subscription View](screenshots/subscription_view.jpg)
-![Customer History](screenshots/customer_history.jpg)
-![Profile](screenshots/profile.jpg)
+--- 
 
+## Screenshots
+
+<p align="center">
+    <img src="screenshots/login.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/camp_select.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/dashboard.jpg" alt="screenshots" width="30%">
+</p>
+
+<p align="center">
+    <img src="screenshots/package_select.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/subscription_page.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/subscription_view.jpg" alt="screenshots" width="30%">
+</p>
+
+<p align="center">
+    <img src="screenshots/customer_page.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/customer_history.jpg" alt="screenshots" width="30%">
+    <img src="screenshots/profile.jpg" alt="screenshots" width="30%">
+</p>
+
+--- 
 
 ## Tech Stack
 - **Framework:** Flutter (3.x)
@@ -81,5 +96,17 @@ The APK will be available in:
 
     /build/app/outputs/flutter-apk/app-release.apk
 
-**Thanks for visiting my profile!**
-contact me: chinthana144@gmail.com 
+---
+
+## Future Improvements
+- Camp transfer option
+- QR code authentication
+- Voucher sale option
+
+--- 
+
+## Connect with me
+- LinkedIn: *www.linkedin.com/in/chinthana-edirisinghe-42399321a*
+- Email: *chinthana144@gmail.com*
+
+Thanks for visiting my profile!
